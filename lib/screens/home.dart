@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memomemo/database/memo.dart';
 import 'package:memomemo/screens/view.dart';
-import 'edit.dart';
+import 'write.dart';
 import 'package:memomemo/database/db.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: (){
           Navigator.push(context,
-            CupertinoPageRoute(builder: (context) => EditPage())
+            CupertinoPageRoute(builder: (context) => WritePage())
           ).then((value) {
             setState(() {});
           });
@@ -80,7 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     CupertinoPageRoute(
                         builder: (context) => ViewPage(id: memo.id))
-                );
+                ).then((value) {
+                  setState(() {});
+                });
               },
               onLongPress: (){
                 showAlertDialog(context, memo);
