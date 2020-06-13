@@ -10,11 +10,11 @@ class DBHelper {
   Future<Database> get database async {
     if (_db != null) return _db;
     _db = openDatabase(
-      join(await getDatabasesPath(), 'memos.db'),
+      join(await getDatabasesPath(), '$TableName.db'),
 
       onCreate: (db, version) {
         return db.execute(
-            'CREATE TABLE $TableName(id INTEGER PRIMARY KEY, title TEXT, text TEXT, createdAt TEXT, editedAt TEXT)'
+            'CREATE TABLE $TableName(id TEXT PRIMARY KEY, title TEXT, text TEXT, createdAt TEXT, editedAt TEXT)'
         );
       },
 
@@ -36,7 +36,7 @@ class DBHelper {
   Future<List<Memo>> memos() async {
     final db = await database;
 
-    final List<Map<String, dynamic>> maps = await db.query('memos');
+    final List<Map<String, dynamic>> maps = await db.query(TableName);
 
     return List.generate(maps.length, (i) {
       return Memo(
