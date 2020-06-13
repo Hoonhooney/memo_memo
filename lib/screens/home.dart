@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memomemo/database/memo.dart';
+import 'package:memomemo/screens/view.dart';
 import 'edit.dart';
 import 'package:memomemo/database/db.dart';
 
@@ -74,7 +75,13 @@ class _MyHomePageState extends State<MyHomePage> {
           itemBuilder: (context, index) {
             Memo memo = snap.data[index];
             return InkWell(
-              onTap: (){},
+              onTap: (){
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => ViewPage(id: memo.id))
+                );
+              },
               onLongPress: (){
                 showAlertDialog(context, memo);
               },
@@ -100,9 +107,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(memo.title,
-                              style: TextStyle(fontSize: 20, color: Colors.black)),
+                              style: TextStyle(fontSize: 20, color: Colors.black),
+                              overflow: TextOverflow.ellipsis,
+                          ),
                           Text(memo.text,
-                              style: TextStyle(fontSize: 15, color: Colors.black54)),
+                              style: TextStyle(fontSize: 15, color: Colors.black54),
+                              overflow: TextOverflow.ellipsis),
                         ],
                       ),
                       Column(

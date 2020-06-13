@@ -10,6 +10,7 @@ class EditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
@@ -38,7 +39,7 @@ class EditPage extends StatelessWidget {
             TextField(
               onChanged: (String text){this.text = text;},
               keyboardType: TextInputType.multiline,
-              maxLines: null,
+              maxLines: 10,
               decoration: InputDecoration(
                 labelText: "Text",
               ),
@@ -56,8 +57,8 @@ class EditPage extends StatelessWidget {
       id: strToSha512(DateTime.now().toString()),
       title: this.title,
       text: this.text,
-      createdAt: DateTime.now().toString(),
-      editedAt: DateTime.now().toString()
+      createdAt: DateTime.now().toString().split('.')[0],
+      editedAt: DateTime.now().toString().split('.')[0]
     );
 
     await helper.insertMemo(fido);
