@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {});
           });
         },
-        tooltip: 'Tab if you want to add a new note',
+        tooltip: 'Tap if you want to add a new note',
         label: Text('Add a New Note'),
         icon: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -53,13 +53,19 @@ class _MyHomePageState extends State<MyHomePage> {
     return await helper.memos();
   }
 
+  Future<void>deleteMemo(String id) async{
+    DBHelper helper = DBHelper();
+    await helper.deleteMemo(id);
+  }
+
+//  memo list view builder
   Widget memoBuilder() {
     return FutureBuilder(
       builder: (context, snap) {
         if (snap.data.isEmpty) {
           return Container(
             alignment: Alignment.center,
-            child: Text('Try writing a new memo!\n\n\n\n\n\n',
+            child: Text('write a new memo!\n\n\n\n\n\n',
               style: TextStyle(fontSize: 20, color: Colors.grey)),);
         }
         return ListView.builder(
@@ -67,49 +73,86 @@ class _MyHomePageState extends State<MyHomePage> {
           itemCount: snap.data.length,
           itemBuilder: (context, index) {
             Memo memo = snap.data[index];
-            return Container(
-              height: 80,
-              margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              padding: EdgeInsets.only(left: 10, right: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.orangeAccent,
-                  width: 1,
-                ),
-                boxShadow: [BoxShadow(color: Colors.orangeAccent, blurRadius: 3)],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(memo.title,
-                          style: TextStyle(fontSize: 20, color: Colors.black)),
-                      Text(memo.text,
-                          style: TextStyle(fontSize: 15, color: Colors.black54)),
-                    ],
+            return InkWell(
+              onTap: (){},
+              onLongPress: (){
+                showAlertDialog(context, memo);
+              },
+              child: Container(
+                  height: 80,
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.orangeAccent,
+                      width: 1,
+                    ),
+                    boxShadow: [BoxShadow(color: Colors.orangeAccent, blurRadius: 3)],
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Text('last edited : ${memo.editedAt}',
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
-                        textAlign: TextAlign.end,),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text(memo.title,
+                              style: TextStyle(fontSize: 20, color: Colors.black)),
+                          Text(memo.text,
+                              style: TextStyle(fontSize: 15, color: Colors.black54)),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text('last edited : ${memo.editedAt}',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                            textAlign: TextAlign.end,),
+                        ],
+                      )
                     ],
                   )
-                ],
-              )
+              ),
             );
           },
         );
       },
       future: loadMemo(),
+    );
+  }
+
+//  alert dialog for deleting memo
+  void showAlertDialog(BuildContext context, Memo memo) async {
+    String result = await showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: Text("Are you sure you want to delete this memo?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Navigator.pop(context, 'delete');
+                setState(() {
+                  deleteMemo(memo.id);
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.pop(context, 'cancel');
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
