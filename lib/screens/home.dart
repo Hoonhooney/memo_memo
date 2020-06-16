@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget memoBuilder() {
     return FutureBuilder(
       builder: (context, snap) {
-        if (snap.data.isEmpty) {
+        if (snap?.data?.isEmpty ?? true) {
           return Container(
             alignment: Alignment.center,
             child: Text('write a new memo!\n\n\n\n\n\n',

@@ -62,7 +62,7 @@ class _ViewPageState extends State<ViewPage>{
     return FutureBuilder<List<Memo>>(
       future: loadMemo(widget.id),
       builder: (BuildContext context, AsyncSnapshot<List<Memo>> snapshot){
-        if (snapshot.data.isEmpty || snapshot.data == null) {
+        if (snapshot?.data?.isEmpty ?? true) {
           return Container(
             alignment: Alignment.center,
             child: Text('error : cannot open this memo!',
