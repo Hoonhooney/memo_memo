@@ -1,6 +1,6 @@
 # memomemo
 
-Note Application
+Note Application(flutter 학습 겸 만든 application)
 
 ## Getting Started
 
